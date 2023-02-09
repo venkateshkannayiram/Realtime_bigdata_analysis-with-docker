@@ -1,0 +1,80 @@
+services:
+
+  zookeeper:
+    image: bitnami/zookeeper:3.7.1
+    container_name: zookeeper
+    hostname: zookeeper
+    ports:
+      - "2181:2181"
+      - "2888:2888"
+      - "3888:3888"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      #ZOOKEEPER_SYNC_LIMIT: 2
+      ALLOW_ANONYMOUS_LOGIN: yes
+      #ALLOW_PLAINTEXT_LISTENER: yes
+
+  kafka:
+    image: bitnami/kafka:3.3.2
+    container_name: kafka
+    hostname: kafka
+    restart: "no"
+    links:
+      - zookeeper
+    ports:
+      - 9092:9092
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: INTERNAL://:29092,EXTERNAL://:9092
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:9092,EXTERNAL://localhost:9092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      ALLOW_PLAINTEXT_LISTENER: yes
+      #ALLOW_ANONYMOUS_LOGIN: yes
+
+  kafdrop:
+    image: obsidiandynamics/kafdrop:3.30.0
+    container_name: kafdrop
+    restart: "no"
+    depends_on:
+      - kafka
+    ports:
+      - 9001:9000
+    environment:
+      KAFKA_BROKERCONNECT: "kafka:29092"
+
+#  postgresql:
+#    image: bitnami/postgresql:15
+#    container_name: postgres
+#    ports:
+#      - '5432:5432'
+#    environment:
+#      - 'ALLOW_EMPTY_PASSWORD=yes'
+
+  Timescale-DB:
+    image: timescale/timescaledb-ha:pg15-latest
+    container_name: Timescale_DB
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5432:5432'
+    volumes: 
+      - db:/var/lib/postgresql/data
+
+  grafana:
+    image: bitnami/grafana:9
+    container_name: grafana
+    ports:
+      - '3000:3000'
+    environment:
+      - 'GF_SECURITY_ADMIN_PASSWORD=Venkat3039'
+
+volumes:
+  db:
+    driver: local
+
+
