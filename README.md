@@ -9,7 +9,7 @@ The system will have two main components:
 
 The system will be scalable, allowing it to handle a large volume of data streams and perform real-time analysis.
 
-The project will be implemented using a combination of technologies such as Apache Kafka, Apache Spark, Docker , Jupyter Notebook, and a front-end visualization tool such as Grafana. The implementation will be based on a  On-premises architecture, ensuring high availability and scalability of the system.
+The project will be implemented using a combination of technologies such as **Apache Kafka, Apache Spark, Docker , Jupyter Notebook, and a front-end visualization tool such as Grafana**. The implementation will be based on a  On-premises architecture, ensuring high availability and scalability of the system.
 
 ## What is Docker?
 In simple terms, Docker is a software platform that simplifies the process of building, running, managing and distributing applications. It does this by virtualizing the operating system of the computer on which it is installed and running.
